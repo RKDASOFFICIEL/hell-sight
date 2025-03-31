@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hell Sight</title>
+    <style>
+        body { 
+            text-align: center; 
+            font-family: Arial, sans-serif; 
+            background-color: black;  /* Fond noir */
+            color: white; 
+        }
+        #game-container { margin-top: 20px; }
+        .arrow { display: inline-block; font-size: 50px; margin: 10px; opacity: 0.5; }
+        .active { opacity: 1; color: yellow; }
+        #health-bar { width: 100%; height: 20px; background: red; }
+        #health { width: 100%; height: 100%; background: green; transition: width 0.3s; }
+        #message { font-size: 30px; margin-top: 20px; }
+        #countdown { font-size: 40px; color: cyan; }
+    </style>
+</head>
+<body>
+    <h1>Hell Sight</h1>
+
+    <!-- Intégration de la musique -->
+    <audio id="background-music" autoplay loop>
+        <source src="Hell_Sights.mp3" type="audio/mp3">
+        Votre navigateur ne supporte pas l'élément audio.
+    </audio>
+
+    <!-- Bouton pour démarrer la musique manuellement -->
+    <button onclick="document.getElementById('background-music').play()">Jouer la musique</button>
+
+    <div id="countdown">3</div>
+    <div id="game-container">
+        <div class="arrow" id="left">⬅️</div>
+        <div class="arrow" id="down">⬇️</div>
+        <div class="arrow" id="up">⬆️</div>
+        <div class="arrow" id="right">➡️</div>
+    </div>
+    <div id="health-bar"><div id="health"></div></div>
+    <div id="message"></div>
+
+    <script>
+        let health = 100;
+        const healthBar = document.getElementById('health');
+        const message = document.getElementById('message');
+        const countdown = document.getElementById('countdown');
+        const arrows = { 'ArrowLeft': 'left', 'ArrowDown': 'down', 'ArrowUp': 'up', 'ArrowRight': 'right' };
+
+        function startCountdown() {
+            let count = 3;
+            const interval = setInterval(() => {
+                countdown.textContent = count > 0 ? count : 'GO!';
+                count--;
+                if (count < -1) { 
+                    clearInterval(interval);
+                    countdown.style.display = 'none';
+                }
+            }, 1000);
+        }
+
+        document.addEventListener('keydown', (event) => {
+            if (arrows[event.key]) {
+                const arrow = document.getElementById(arrows[event.key]);
+                arrow.classList.add('active');
+                health = Math.min(100, health + 5);
+                healthBar.style.width = health + '%';
+                message.textContent = 'Bien joué!';
+            }
+        });
+
+        document.addEventListener('keyup', (event) => {
+            if (arrows[event.key]) {
+                document.getElementById(arrows[event.key]).classList.remove('active');
+            }
+        });
+
+        startCountdown();
+    </script>
+</body>
+</html>
